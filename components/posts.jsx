@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { deletePost, getPosts } from "@/api/postApi";
+import PostFrom from "@/components/postFrom";
 
 const Posts = () => {
   const [data, setData] = useState([]);
@@ -24,9 +25,15 @@ const Posts = () => {
 
   const handleDelete = async (id) => {
     const res = await deletePost(id);
-    const newDeta = data.filter((currentData) => currentData.id === id);
-    setData(newDeta);
-    console.log(res);
+    const newDeta = data.filter((currentData) => currentData.id !== id);
+
+    try {
+      if (res.status === true || res.status === 200) {
+        setData(newDeta);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -34,6 +41,10 @@ const Posts = () => {
       <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">
         All Posts
       </h1>
+
+      <div>
+        <PostFrom data={data} setData={setData} />
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         {data?.map((post) => (
