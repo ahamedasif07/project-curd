@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getPosts } from "@/api/postApi";
+import { deletePost, getPosts } from "@/api/postApi";
 
 const Posts = () => {
   const [data, setData] = useState([]);
@@ -10,7 +10,7 @@ const Posts = () => {
     const getPostData = async () => {
       try {
         const res = await getPosts();
-        setData(res);
+        setData(res.data);
       } catch (err) {
         console.error("API Error:", err);
       }
@@ -22,21 +22,21 @@ const Posts = () => {
     alert(`Edit post ID: ${post.id}`);
   };
 
-  const handleDelete = (id) => {
-    const confirmDelete = confirm("Are you sure you want to delete this post?");
-    if (confirmDelete) {
-      setData(data.filter((post) => post.id !== id));
-    }
+  const handleDelete = async (id) => {
+    const res = await deletePost(id);
+    const newDeta = data.filter((currentData) => currentData.id === id);
+    setData(newDeta);
+    console.log(res);
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen max-w-7xl mx-auto  p-8">
       <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">
         All Posts
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {data.map((post) => (
+        {data?.map((post) => (
           <div
             key={post.id}
             className="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between transform transition hover:scale-105 hover:shadow-2xl duration-300"
@@ -44,7 +44,7 @@ const Posts = () => {
             {/* Header with gradient */}
             <div className="flex items-center justify-between mb-4">
               <span className="px-3 py-1 rounded-full text-white text-sm font-semibold bg-gradient-to-r from-purple-500 to-indigo-500">
-                ID: {post.id}
+                {post.id}
               </span>
               <span className="text-gray-400 text-sm">User: {post.userId}</span>
             </div>
