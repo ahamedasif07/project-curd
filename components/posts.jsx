@@ -6,6 +6,7 @@ import PostFrom from "@/components/postFrom";
 
 const Posts = () => {
   const [data, setData] = useState([]);
+  const [handleEditPost, setHandleEditPost] = useState({});
 
   useEffect(() => {
     const getPostData = async () => {
@@ -19,9 +20,7 @@ const Posts = () => {
     getPostData();
   }, []);
 
-  const handleEdit = (post) => {
-    alert(`Edit post ID: ${post.id}`);
-  };
+  const handleEdit = (post) => setHandleEditPost(post);
 
   const handleDelete = async (id) => {
     const res = await deletePost(id);
@@ -43,7 +42,12 @@ const Posts = () => {
       </h1>
 
       <div>
-        <PostFrom data={data} setData={setData} />
+        <PostFrom
+          data={data}
+          setData={setData}
+          handleEditPost={handleEditPost}
+          setHandleEditPost={setHandleEditPost}
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

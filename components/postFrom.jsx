@@ -1,9 +1,9 @@
 "use client";
 
 import { postData } from "@/api/postApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const PostForm = ({ data, setData }) => {
+const PostForm = ({ data, setData, handleEditPost, setHandleEditPost }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,10 @@ const PostForm = ({ data, setData }) => {
       setLoading(false);
     }
   };
-
+  useEffect(() => {
+    handleEditPost && setTitle(handleEditPost.title);
+    handleEditPost && setBody(handleEditPost.body);
+  }, [handleEditPost]);
   return (
     <form
       onSubmit={handleSubmit}
